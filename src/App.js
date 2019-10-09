@@ -2,12 +2,17 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 import axios from "axios";
 import Header from "./component/Header";
-import Image from "./component/Image";
+import NasaApod from "./component/Image";
 
 
 function App() {
-  const [photo, setPhoto] = useState([]);
-  const [title, setTitle] = useState([]);
+  let today = new Date();
+  let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+  let yesterday = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+(today.getDate()-1);
+  const[nasaimg, setNasaImg] = useState([]);
+  const [imgDate, setImgDate] = useState(date);
+  console.log(imgDate);
+  console.log(today.getDate()-1)
   useEffect(() =>{
     axios
     .get('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY')

@@ -1,48 +1,54 @@
-import React, { useEffect, useState } from "react";
-import "./App.css";
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
 import axios from "axios";
-import Header from "./component/Header";
-import NasaApod from "./component/Image";
-
-
-function App() {
-  let today = new Date();
-  let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-  let yesterday = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+(today.getDate()-1);
-  const[nasaimg, setNasaImg] = useState([]);
-  const [imgDate, setImgDate] = useState(date);
-  console.log(imgDate);
-  console.log(today.getDate()-1)
-  useEffect(() =>{
+import ImageCard from "./ItemCard";
+import ParagraphCard from "./ParagraphCard";
+import DateInput from "./DateInput";
+export default function DataToItem() {
+  const [imageData, setImageData] = useState([]);
+  const [description, setDescription] = useState([]);
+  const [date, setDate] = useState("YYYY-DD-MM");
+//   function myFunction(textInput) {
+//     setDate(value);
+//   }
+  useEffect(() => {
     axios
-    .get('https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY')
-    .then(response =>{
-      console.log("Great Success! -'Borat'")
-      setPhoto(response.data.url);
-      setTitle(response.data.title);
-    })
-    .catch(error =>{
-      console.log("An error has occurred:", error);
-    });
-  }, [])
+      .get(`https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&date=${date}`)
+      .then(response => {
+        setImageData(response.data);
+        setDescription(response.data.explanation)
+      })
+      .catch(error => {
+        console.log("the data was not returned", error);
+      });
+  }, [date]);
   return (
-    
-    <div className="App-header"> <h1>You have reached peak Altitude.</h1>
-    <div className="App=link">test</div>
-    <img className="App-logo"></img>
-    <div className="App">
-      
-      <p>
-        <img className="App-logo"></img>
-        <button>test</button>
-        Read through the instructions in the README.md file to build your NASA
-        app! Have fun 🚀!
-      </p>
-      <Header title={title}/>
-      <Image image={photo}/>
-    </div>
+    <div className="container">
+        <ImageCard image = {imageData.url} title= {imageData.title}/>
+        <ParagraphCard description = {description}/>
+        <DateInput setDate= {setDate}/>
     </div>
   );
 }
 
-export default App;
+//   return (
+    
+//     <div className="App-header"> <h1>You have reached peak Altitude.</h1>
+//     <div className="App=link">test</div>
+//     <img className="App-logo"></img>
+//     <div className="App">
+      
+//       <p>
+//         <img className="App-logo"></img>
+//         <button>test</button>
+//         Read through the instructions in the README.md file to build your NASA
+//         app! Have fun 🚀!
+//       </p>
+//       <Header title={title}/>
+//       <Image image={photo}/>
+//     </div>
+//     </div>
+//   );
+// }
+
+// export default App;
